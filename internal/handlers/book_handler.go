@@ -2,15 +2,38 @@ package handlers
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/ReynirPY/library-managment-system/config"
 	"github.com/ReynirPY/library-managment-system/internal/models"
 )
 
-func FetchBooks() ([]*models.Book, error) {
+func FetchBooks(author string, year int, isbn string) ([]*models.Book, error) {
+	query := `SELECT id, title, author, "year", isbn
+	FROM book WHERE 1=1`
 	var books []*models.Book
-	err := config.DB.Select(&books, `SELECT id, title, author, "year", isbn
-	FROM book;`)
+	args := []interface{}{}
+	argIndex := 1
+
+	if author != "" {
+		query += " AND author=$" + strconv.Itoa(argIndex)
+		args = append(args, author)
+		argIndex++
+	}
+
+	if year != 0 {
+		query += " AND year=$" + strconv.Itoa(argIndex)
+		args = append(args, year)
+		argIndex++
+	}
+
+	if isbn != "" {
+		query += " AND isbn=$" + strconv.Itoa(argIndex)
+		args = append(args, isbn)
+		argIndex++
+	}
+
+	err := config.DB.Select(&books, query, args...)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch books %w", err)

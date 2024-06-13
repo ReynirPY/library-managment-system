@@ -13,7 +13,21 @@ import (
 )
 
 func GetBooksHandler(w http.ResponseWriter, r *http.Request) {
-	books, err := handlers.FetchBooks()
+
+	author := r.URL.Query().Get("author")
+	yearStr := r.URL.Query().Get("year")
+	isbn := r.URL.Query().Get("isbn")
+
+	var year int
+	var err error
+	if yearStr != "" {
+		year, err = strconv.Atoi(yearStr)
+		if err != nil {
+			http.Error(w, "invalid year input", http.StatusBadRequest)
+		}
+	}
+
+	books, err := handlers.FetchBooks(author, year, isbn)
 	if err != nil {
 		http.Error(w, "failed to fetch books", http.StatusInternalServerError)
 		log.Println(err.Error())
