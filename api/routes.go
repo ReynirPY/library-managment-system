@@ -12,11 +12,15 @@ func RegisterRoutes() *mux.Router {
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "helloworld")
 	})
+	//book actions routes
 	r.HandleFunc("/books", GetBooksHandler).Methods("GET")
 	r.HandleFunc("/books", PostBookHandler).Methods("POST")
 	r.HandleFunc("/books/{id}", GetBookHandler).Methods("GET")
 	r.HandleFunc("/books/{id}", DeleteBookHandler).Methods("DELETE")
 	r.HandleFunc("/books/{id}", PutBookHandler).Methods("PUT")
+
+	//auth routes
+	r.HandleFunc("/registration", RegistrationHandler).Methods("POST")
 
 	return r
 }

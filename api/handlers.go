@@ -142,3 +142,21 @@ func PutBookHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("book was updated")
 
 }
+
+func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
+	var user models.User
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		http.Error(w, "wrong input", http.StatusBadRequest)
+		log.Println(err.Error())
+		return
+	}
+
+	err = handlers.InsertUser(user)
+	if err != nil {
+		http.Error(w, "error during create user", http.StatusInternalServerError)
+		log.Println(err.Error())
+		return
+	}
+
+}
