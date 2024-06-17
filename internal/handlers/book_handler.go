@@ -8,16 +8,22 @@ import (
 	"github.com/ReynirPY/library-managment-system/internal/models"
 )
 
-func FetchBooks(author string, year int, isbn string) ([]*models.Book, error) {
+func FetchBooks(title string, author string, year int, isbn string) ([]*models.Book, error) {
 	query := `SELECT id, title, author, "year", isbn
 	FROM book WHERE 1=1`
 	var books []*models.Book
 	args := []interface{}{}
 	argIndex := 1
 
+	if title != "" {
+		query += " AND LOWER(title) LIKE LOWER($" + strconv.Itoa(argIndex) + ")"
+		args = append(args, "%"+title+"%")
+		argIndex++
+	}
+
 	if author != "" {
-		query += " AND author=$" + strconv.Itoa(argIndex)
-		args = append(args, author)
+		query += " AND LOWER(author) LIKE LOWER($" + strconv.Itoa(argIndex) + ")"
+		args = append(args, "%"+author+"%")
 		argIndex++
 	}
 
