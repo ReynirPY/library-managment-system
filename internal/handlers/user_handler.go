@@ -37,3 +37,13 @@ func GetUserByCredentials(email string) (models.User, error) {
 
 	return user, nil
 }
+
+func GetUserByID(id int) (models.User, error) {
+	var user models.User
+	err := config.DB.Get(&user, "SELECT * FROM users WHERE id=$1", id)
+	if err != nil {
+		return models.User{}, fmt.Errorf("failed to get user from db %w", err)
+	}
+
+	return user, nil
+}
