@@ -143,3 +143,23 @@ func PutBookHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("book was updated")
 
 }
+
+func GetBooksFromBookmarks(w http.ResponseWriter, r *http.Request) {
+	user := r.Context().Value("user").(*models.User)
+
+	books, err := handlers.FetchBooksFromBookmarks(*user)
+	if err != nil {
+		http.Error(w, "failed to fetch books from bookmarks", http.StatusInternalServerError)
+		log.Println(err.Error())
+	}
+
+	response, err := json.Marshal(books)
+	if err != nil {
+		http.Error(w, "failed to convert fetched books to json", http.StatusInternalServerError)
+		log.Println(err.Error())
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(response)
+}

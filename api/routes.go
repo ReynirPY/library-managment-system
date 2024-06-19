@@ -29,8 +29,8 @@ func RegisterRoutes() *mux.Router {
 	books.HandleFunc("/{id}", PutBookHandler).Methods("PUT")
 
 	//auth user routes
-	r.HandleFunc("/users/registration/", UserLoginHandler).Methods("POST")
-	r.HandleFunc("/users/login/", UserLoginHandler).Methods("POST")
+	r.HandleFunc("/users/sign-up/", UserLoginHandler).Methods("POST")
+	r.HandleFunc("/users/sign-in/", UserLoginHandler).Methods("POST")
 
 	//auth admin routes
 	r.HandleFunc("/admins/sign-up/", AdminRegistrationHandler).Methods("POST")
@@ -40,6 +40,7 @@ func RegisterRoutes() *mux.Router {
 	bookmarks := r.PathPrefix("/bookmarks").Subrouter()
 	bookmarks.Use(auth.JWTMiddlewareBookmark)
 	bookmarks.HandleFunc("", AddBookmarkHandler).Methods("POST")
+	bookmarks.HandleFunc("/books/", GetBooksFromBookmarks).Methods("GET")
 
 	return r
 }

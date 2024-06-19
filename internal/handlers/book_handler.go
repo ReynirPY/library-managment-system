@@ -102,3 +102,13 @@ func UpdateBook(id int, book models.Book) error {
 
 	return nil
 }
+
+func FetchBooksFromBookmarks(user models.User) ([]*models.Book, error) {
+	var books []*models.Book
+	query := "SELECT book.id, book.title, book.author, book.year, book.isbn FROM book JOIN bookmarks ON bookmarks.book_id = book.id WHERE bookmarks.user_id=$1"
+	err := config.DB.Select(&books, query, user.ID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch books by bookmarks %w", err)
+	}
+	return books, nil
+}
