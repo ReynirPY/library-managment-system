@@ -144,7 +144,7 @@ func PutBookHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func GetBooksFromBookmarks(w http.ResponseWriter, r *http.Request) {
+func GetBooksFromBookmarksHandler(w http.ResponseWriter, r *http.Request) {
 	user := r.Context().Value("user").(*models.User)
 
 	books, err := handlers.FetchBooksFromBookmarks(*user)

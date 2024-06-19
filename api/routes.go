@@ -40,7 +40,8 @@ func RegisterRoutes() *mux.Router {
 	bookmarks := r.PathPrefix("/bookmarks").Subrouter()
 	bookmarks.Use(auth.JWTMiddlewareBookmark)
 	bookmarks.HandleFunc("", AddBookmarkHandler).Methods("POST")
-	bookmarks.HandleFunc("/books/", GetBooksFromBookmarks).Methods("GET")
+	bookmarks.HandleFunc("/{id}", DeleteBookmarkHandler).Methods("DELETE")
+	bookmarks.HandleFunc("/books/", GetBooksFromBookmarksHandler).Methods("GET")
 
 	return r
 }
